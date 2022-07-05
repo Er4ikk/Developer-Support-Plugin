@@ -24,4 +24,27 @@
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
+
+    <actions>
+        <action id="com.unimol.developercodesupport.MainAction" class="com.unimol.developercodesupport.MainAction"
+                text="Developer Code Support" description="example"
+                icon="AllIcons.Debugger.KillProcess">
+
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
+
+    <!--
+
+        <group
+                id="org.intellij.sdk.action.GroupedActions"
+                text="Static Grouped Actions"
+                popup="true"
+                icon="SdkIcons.Sdk_default_icon">
+            <add-to-group
+                    group-id="ToolsMenu"
+                    anchor="after"
+                    relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>
+        </group>
+    -->
 </idea-plugin>

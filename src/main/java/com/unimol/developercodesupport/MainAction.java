@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainAction extends AnAction {
 
+
+
+    private Project currentProject;
     @Override
     public void update(@NotNull AnActionEvent event) {
         // Using the event, evaluate the context,
@@ -23,8 +26,8 @@ public class MainAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         // Using the event, create and show a dialog
-        Project currentProject = event.getProject();
-        event.getPresentation().setEnabledAndVisible(currentProject != null);
+        this.currentProject = event.getProject();
+        event.getPresentation().setEnabledAndVisible(this.currentProject != null);
 
         StringBuilder message =
                 new StringBuilder(event.getPresentation().getText() + " Selected!");
@@ -35,7 +38,7 @@ public class MainAction extends AnAction {
         }
         String title = event.getPresentation().getDescription();
 
-        //showTabMenu(currentProject,message.toString(),title);
+        //showTabMenu(this.currentProject,getSourceFilePath(),title);
         //openFileChooser(currentProject);
     }
 
@@ -47,6 +50,14 @@ public class MainAction extends AnAction {
                 Messages.getInformationIcon());
     }
 
+    public String getProjectPath(){
+        return this.currentProject.getBasePath();
+    }
+
+    public String getSourceFilePath(){
+        return currentProject.getPresentableUrl();
+    }
+
     public void openFileChooser(Project currentProject){
         FileChooserDescriptor fileChooserDescriptor =
                 new FileChooserDescriptor(false,
@@ -56,19 +67,24 @@ public class MainAction extends AnAction {
                         false,
                         true);
 
-        fileChooserDescriptor.setTitle("Select folder(s) to inspect");
+        fileChooserDescriptor.setTitle("Select Folder(S) to Inspect");
 
-        fileChooserDescriptor.setDescription("items selected:");
+        fileChooserDescriptor.setDescription("Items selected:");
         FileChooser.chooseFile(fileChooserDescriptor,
                                  currentProject,
-                                    null,virtualFile -> {
-
-
-                    Messages.showMessageDialog(currentProject,
-                            virtualFile.getPath(),
-                            "Path",
-                            Messages.getInformationIcon());
-                }
+                                    null,virtualFile ->
+                                            Messages.showMessageDialog(currentProject,
+                                            virtualFile.getPath(),
+                                            "Path",
+                                            Messages.getInformationIcon())
         );
+    }
+
+    public Project getCurrentProject() {
+        return currentProject;
+    }
+
+    public void setCurrentProject(Project currentProject) {
+        this.currentProject = currentProject;
     }
 }

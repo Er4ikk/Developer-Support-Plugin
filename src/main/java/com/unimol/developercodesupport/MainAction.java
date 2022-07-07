@@ -55,7 +55,7 @@ public class MainAction extends AnAction {
 
     public void showTabMenu(Project currentProject,String message, String title){
 
-        MainToolWindow mainToolWindow = new MainToolWindow();
+        MainToolWindow mainToolWindow = new MainToolWindow(currentProject);
         mainToolWindow.startTool();
 
 
@@ -79,27 +79,7 @@ public class MainAction extends AnAction {
         return currentProject.getPresentableUrl();
     }
 
-    public void openFileChooser(Project currentProject){
-        FileChooserDescriptor fileChooserDescriptor =
-                new FileChooserDescriptor(false,
-                        true,
-                        false,
-                        false,
-                        false,
-                        true);
 
-        fileChooserDescriptor.setTitle("Select Folder(S) to Inspect");
-
-        fileChooserDescriptor.setDescription("Items selected:");
-        FileChooser.chooseFile(fileChooserDescriptor,
-                                 currentProject,
-                                    null,virtualFile ->
-                                            Messages.showMessageDialog(currentProject,
-                                            virtualFile.getPath(),
-                                            "Path",
-                                            Messages.getInformationIcon())
-        );
-    }
 
     public Project getCurrentProject() {
         return currentProject;

@@ -4,13 +4,19 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.unimol.model.Model;
+import com.unimol.modelManager.ModelManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class MainToolWindow {
+    private  ModelManager modelManage;
     private JTabbedPane tabs;
     private JPanel panel1;
     private JPanel settings;
@@ -26,37 +32,55 @@ public class MainToolWindow {
     private JComboBox selectCodingTaskDropDown;
     private  JFrame frame ;
     public MainToolWindow(Project currentProject) {
+            addingStartButtonBehaviour(currentProject);
+    }
+
+    public void addingStartButtonBehaviour(Project currentProject){
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String programmingLanguage=selectProgrammingLanguageDropDown.getSelectedItem().toString();
                 String codingTask=selectCodingTaskDropDown.getSelectedItem().toString();
                 String scanScope=scanScapeDropDown.getSelectedItem().toString();
-                System.out.println(selectProgrammingLanguageDropDown.getSelectedItem().toString());
-                System.out.println(selectCodingTaskDropDown.getSelectedItem().toString());
-                System.out.println(scanScapeDropDown.getSelectedItem().toString());
+                String modelName="test";
+
+                createModel(modelName,codingTask,programmingLanguage);
+
 
                 if(scanScope.contains("Directory")){
-                    openFileChooser(currentProject);
+                    openFileChooser(currentProject,modelName);
                 }
-                RunningApplication runningApplication= new RunningApplication(frame);
-                frame.setContentPane(runningApplication.getTabs());
-                frame.validate();
+
+                    modelManage.setCurrentProject(currentProject);
+                    //openBottomToolBar();
+
+                    RunningApplication runningApplication= new RunningApplication(frame,modelName);
+                    frame.setContentPane(runningApplication.getTabs());
+                    frame.validate();
 
 
-
-            }
+           }
         });
+
     }
 
-    public void openFileChooser(Project currentProject){
+
+
+    public void createModel(String modelName,String codingTask,String programmingLanguage){
+        Model model = new Model(modelName,codingTask,programmingLanguage);
+        modelManage= ModelManager.getInstance();
+        modelManage.getAvailableModels().put(modelName,model);
+    }
+
+
+    public void openFileChooser(Project currentProject,String modelName){
         FileChooserDescriptor fileChooserDescriptor =
                 new FileChooserDescriptor(false,
                         true,
                         false,
                         false,
                         false,
-                        true);
+                        false);
 
         fileChooserDescriptor.setTitle("Select Folder(S) to Inspect");
 
@@ -69,6 +93,7 @@ public class MainToolWindow {
                                 "Path",
                                 Messages.getInformationIcon())
         );
+
     }
 
 
@@ -81,11 +106,16 @@ public class MainToolWindow {
         frame = new JFrame("Developer Code Support");
         frame.setContentPane(tabs);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setWindowDimensionAndPosition();
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+
+    public void setWindowDimensionAndPosition(){
         frame.setPreferredSize(new Dimension(400,300));
         Dimension screenDimension= new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
         int screenSize=(int)screenDimension.getWidth();
         frame.setLocation(screenSize,100);
-        frame.pack();
-        frame.setVisible(true);
     }
 }

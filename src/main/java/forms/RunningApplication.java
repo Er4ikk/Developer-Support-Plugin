@@ -1,5 +1,8 @@
 package forms;
 
+import com.unimol.model.Model;
+import com.unimol.modelManager.ModelManager;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +29,34 @@ public class RunningApplication {
     private JLabel loadingLabelStopScan;
     private JFrame frame;
 
-    public RunningApplication(JFrame frame) {
 
+    private String modelName;
+
+
+
+    public RunningApplication(JFrame frame, String modelName) {
+
+
+        setFrame(frame);
+        showOptionsModelSelected(modelName);
+        addStartButtonBehaviour();
+
+    }
+
+    public void showOptionsModelSelected(String modelName){
+        Model model = ModelManager.getInstance().retrievingModel(modelName);
+        languageSelectedLabel.setText(model.getProgrammingLanguage());
+        taskSelectedLabel.setText(model.getCodingTask());
+        setModelName(modelName);
+    }
+
+
+
+    public void addStartButtonBehaviour(){
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                FinishedScan finishedScan = new FinishedScan();
+                FinishedScan finishedScan = new FinishedScan(getModelName());
 
                 frame.setContentPane(finishedScan.getTabs());
                 frame.validate();
@@ -39,7 +64,26 @@ public class RunningApplication {
         });
     }
 
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public void setFrame(JFrame frame) {
+        this.frame = frame;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+
     public JTabbedPane getTabs(){
         return this.tabs;
     }
+
 }

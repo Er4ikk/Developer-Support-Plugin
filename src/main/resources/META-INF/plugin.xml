@@ -26,25 +26,36 @@
     </extensions>
 
     <actions>
-        <action id="com.unimol.developercodesupport.MainAction" class="com.unimol.developercodesupport.MainAction"
-                text="Developer Code Support" description="example"
-                icon="AllIcons.Debugger.KillProcess">
+        <group
+          id="com.unimol-developercodesupport.CodeSupportGroup"
+          text="Developer Code Support"
+          icon="AllIcons.Debugger.KillProcess"
+          popup="true"
+        >
 
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-        </action>
+            <add-to-group group-id="RefactoringMenu" anchor="first"/>
+
+
+            <action
+                    id="com.unimol.developercodesupport.BugFixing"
+                    class="com.unimol.developercodesupport.BugFixing"
+                    text="Bug Fixing(Java)"
+                    description="example"
+            >
+
+
+            </action>
+
+            <action
+                    id="com.developercodesupport"
+                    class="com.unimol.developercodesupport.ImproveCodeReadability"
+                    text="Improve Code Readability(Java)"/>
+
+
+        </group>
+
+
     </actions>
 
-    <!--
 
-        <group
-                id="org.intellij.sdk.action.GroupedActions"
-                text="Static Grouped Actions"
-                popup="true"
-                icon="SdkIcons.Sdk_default_icon">
-            <add-to-group
-                    group-id="ToolsMenu"
-                    anchor="after"
-                    relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>
-        </group>
-    -->
 </idea-plugin>

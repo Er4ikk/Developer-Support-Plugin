@@ -1,17 +1,29 @@
 package com.unimol.developercodesupport;
 
+import com.intellij.diff.*;
+
+
+import com.intellij.diff.contents.DiffContent;
+import com.intellij.diff.requests.DiffRequest;
+import com.intellij.diff.requests.SimpleDiffRequest;
+
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 
-import forms.MainToolWindow;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+
+import com.intellij.openapi.vfs.VirtualFile;
+
 import org.jetbrains.annotations.NotNull;
 
+
 import javax.swing.*;
+
+
 
 public class BugFixing extends AnAction {
 
@@ -33,19 +45,40 @@ public class BugFixing extends AnAction {
 
         this.currentProject = event.getProject();
         event.getPresentation().setEnabledAndVisible(this.currentProject != null);
-        FileEditorManagerEx fileEditorManagerEx = new FileEditorManagerImpl(currentProject);
         Editor editor = event.getData(CommonDataKeys.EDITOR);
-
+        String response="test";
         if(editor.getSelectionModel().hasSelection()){
-            System.out.println(editor.getSelectionModel().getSelectedText());
+            response=editor.getSelectionModel().getSelectedText();
+            VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
+         showDiff(currentProject,response,virtualFile,editor);
+
         }else{
-            System.out.println("ahhhhhhhhhh");
+            JOptionPane.showMessageDialog(
+                                            tabbedPane1,
+                                    "Select Code First",
+                                        "No Code Selected",
+                                    JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
+    public void showDiff(Project currentProject,String response,VirtualFile virtualFile,Editor editor) {
+        DiffContentFactoryImpl diffContentFactory = new DiffContentFactoryImpl();
+        String title = "Diff for " +virtualFile.getName();
+        String title1 = "My Version";
+        String title2 =  "Suggestions";
+            DiffContent content1 = diffContentFactory.createFragment(
+                    currentProject,
+                    editor.getDocument(),
+                    new TextRange(editor.getSelectionModel().getSelectionStart(),
+                            editor.getSelectionModel().getSelectionEnd()));
 
+            DiffContent content2 = diffContentFactory.create(response+"ciao",virtualFile);
+            DiffRequest request = new SimpleDiffRequest(title, content1, content2, title1, title2);
+            DiffManagerImpl diffManager = new DiffManagerImpl();
+            diffManager.showDiffBuiltin(currentProject,request);
 
+    }
 
 
     public Project getCurrentProject() {

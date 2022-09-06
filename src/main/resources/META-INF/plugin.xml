@@ -40,16 +40,20 @@
                     id="com.unimol.developercodesupport.BugFixing"
                     class="com.unimol.developercodesupport.BugFixing"
                     text="Bug Fixing(Java)"
-                    description="example"
+
             >
 
 
             </action>
 
             <action
-                    id="com.developercodesupport"
+                    id="com.developercodesupport.ImproveCodeReadability"
                     class="com.unimol.developercodesupport.ImproveCodeReadability"
                     text="Improve Code Readability(Java)"/>
+
+            <action id="com.developercodesupport.CodeGenerator"
+                    class="com.unimol.developercodesupport.CommentGenerator"
+                    text="CommentGenerator(Java)"/>
 
 
         </group>

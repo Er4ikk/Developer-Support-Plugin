@@ -18,31 +18,31 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class CommentGenerator extends AnAction {
+public class AssertionRaw extends AnAction {
+    private Project currentProject;
     private JTabbedPane tabbedPane1;
-
     @Override
     public void update(@NotNull AnActionEvent event) {
         // Using the event, evaluate the context,
         // and enable or disable the action.
     }
 
+
+
     @Override
-    public void actionPerformed(AnActionEvent event) {
+    public void actionPerformed(@NotNull AnActionEvent event) {
+        // Using the event, create and show a dialog
 
-        Project currentProject = event.getProject();
-        event.getPresentation().setEnabledAndVisible(currentProject != null);
+        this.currentProject = event.getProject();
+        event.getPresentation().setEnabledAndVisible(this.currentProject != null);
         Editor editor = event.getData(CommonDataKeys.EDITOR);
-        String response;
-
-        assert editor != null;
+        String response="test";
         if(editor.getSelectionModel().hasSelection()){
             response=editor.getSelectionModel().getSelectedText();
             ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String commentGenerated=connectionManager.makeRequest("generate comment",response);
+            String assertionGenerated=connectionManager.makeRequest("generate assertion",response);
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-            assert virtualFile != null;
-            showDiff(currentProject,commentGenerated+response,virtualFile,editor);
+            showDiff(currentProject,assertionGenerated,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(
@@ -54,16 +54,11 @@ public class CommentGenerator extends AnAction {
 
     }
 
-
-
-
-
-    public void showDiff(Project currentProject,String response,VirtualFile virtualFile,Editor editor) {
+    public void showDiff(Project currentProject, String response, VirtualFile virtualFile, Editor editor) {
         DiffContentFactoryImpl diffContentFactory = new DiffContentFactoryImpl();
         String title = "Diff for " +virtualFile.getName();
-        String title1 = "My version";
+        String title1 = "My Version";
         String title2 =  "Suggestions";
-
         DiffContent content1 = diffContentFactory.createFragment(
                 currentProject,
                 editor.getDocument(),
@@ -76,5 +71,6 @@ public class CommentGenerator extends AnAction {
         diffManager.showDiffBuiltin(currentProject,request);
 
     }
+
 
 }

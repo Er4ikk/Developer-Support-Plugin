@@ -48,15 +48,20 @@
 
             <action
                     id="com.developercodesupport.ImproveCodeReadability"
-                    class="com.unimol.developercodesupport.ImproveCodeReadability"
-                    text="Improve Code Readability(Java)"/>
+                    class="com.unimol.developercodesupport.AssertionRaw"
+                    text="Assertion Raw(Java)"/>
 
             <action id="com.developercodesupport.CodeGenerator"
                     class="com.unimol.developercodesupport.CommentGenerator"
                     text="CommentGenerator(Java)"/>
 
+            <action id="com.unimol.developercodesupport.CommentSummary"
+                    class="com.unimol.developercodesupport.CommentSummary" text="Comment Summarization"/>
+
+
 
         </group>
+
 
 
     </actions>

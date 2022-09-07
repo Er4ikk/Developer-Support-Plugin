@@ -2,8 +2,9 @@ package com.unimol.connectionManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,12 +15,9 @@ import java.util.HashMap;
 public class ConnectionManager {
 
     private static ConnectionManager connectionManager=null;
-    private String host="localhost";
-    private String port="5000";
-    private String finalUrl="http://"+host+":"+port;
-    private String generateCodeCommentUrl=finalUrl+"/code";
-    private String generateBugFixUrl=finalUrl+"/bug_fix_small";
-
+    private final String host="localhost";
+    private final String port="5000";
+    private JTabbedPane tabbedPane1;
 
     private ConnectionManager() {
 
@@ -33,13 +31,13 @@ public class ConnectionManager {
         return connectionManager;
     }
 
-    public String creatingCodeCommentRequest(String codeFragment){
+    public String creatingRequestBody(String codeFragment){
         var values = new HashMap<String, String>() {{
             put("message", codeFragment);
         }};
 
         var objectMapper = new ObjectMapper();
-        String requestBody = null;
+        String requestBody;
         try {
             requestBody = objectMapper
                     .writeValueAsString(values);
@@ -52,18 +50,29 @@ public class ConnectionManager {
 
     public String makeRequest(String codeTask,String codeFragment){
         String response="";
+        String finalUrl = "http://" + host + ":" + port;
+        String generateCodeCommentUrl = finalUrl + "/code";
+        String generateBugFixUrl = finalUrl + "/bug_fix_small";
+        String generateRawAssertUrl = finalUrl + "/assertion_raw";
+        String generateCommentSummaryUrl = finalUrl + "/comment_summary";
         switch (codeTask){
             case "generate comment":
-                response=sendRequest(codeFragment,generateCodeCommentUrl);
+                response=sendRequest(codeFragment, generateCodeCommentUrl);
                 break;
 
             case "generate bug fix":
-                response=sendModelRequest(codeFragment,generateBugFixUrl);
+                response=sendMultiTaskModelRequest(codeFragment, generateBugFixUrl);
                 break;
 
             case "generate assertion":
-                response=sendModelRequest(codeFragment,generateCodeCommentUrl);
+                response=sendMultiTaskModelRequest(codeFragment, generateRawAssertUrl);
                 break;
+
+            case "generate comment summary":
+                response=sendMultiTaskModelRequest(codeFragment, generateCommentSummaryUrl);
+                break;
+            default:
+                System.out.println("Invalid task");
         }
 
 
@@ -72,12 +81,11 @@ public class ConnectionManager {
     }
 
     public String  sendRequest(String codeFragment,String url){
-        String requestBodyRaw=creatingCodeCommentRequest(codeFragment);
+        String requestBodyRaw=creatingRequestBody(codeFragment);
 
         String requestBody= requestBodyRaw
                 .replaceAll("\\\\n", "")
                 .replaceAll("\\\\t", "").trim();
-      ;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -86,25 +94,31 @@ public class ConnectionManager {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
+
+            JOptionPane.showMessageDialog(
+                    tabbedPane1,
+                    e,
+                    "Exception detected",
+                    JOptionPane.ERROR_MESSAGE);
+
             throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+
         }
         return "\n /* "+parseResponse(response)+" */ \n";
     }
 
-    public String  sendModelRequest(String codeFragment,String url){
-        String requestBodyRaw=creatingCodeCommentRequest(codeFragment);
+    public String  sendMultiTaskModelRequest(String codeFragment,String url){
+        String requestBodyRaw=creatingRequestBody(codeFragment);
 
         String requestBody= requestBodyRaw
                 .replaceAll("\\\\n", "")
                 .replaceAll("\\\\t", "").trim();
-        ;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -113,16 +127,19 @@ public class ConnectionManager {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
+            JOptionPane.showMessageDialog(
+                    tabbedPane1,
+                    e,
+                    "Exception detected",
+                    JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException(e);
         }
-        return "\n  "+parseModelResponse(response)+"\n";
+        return "\n  "+parseMultiTaskModelResponse(response)+"\n";
     }
 
     public String parseResponse(HttpResponse<String> response){
@@ -131,15 +148,17 @@ public class ConnectionManager {
         return comment[1]
                 .replace('}',' ')
                 .replace(']',' ')
+                .replace('[',' ')
                 .replace('"',' ');
     }
 
-    public String parseModelResponse(HttpResponse<String> response){
+    public String parseMultiTaskModelResponse(HttpResponse<String> response){
         String[] comment=response.body().split(":");
 
         return comment[0]
                 .replace('}',' ')
                 .replace(']',' ')
+                .replace('[',' ')
                 .replace('"',' ')
                 .replace('\'',' ');
     }

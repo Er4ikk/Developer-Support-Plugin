@@ -40,9 +40,9 @@ public class AssertionRaw extends AnAction {
         if(editor.getSelectionModel().hasSelection()){
             response=editor.getSelectionModel().getSelectedText();
             ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String assertionGenerated=connectionManager.makeRequest("generate assertion",response);
+            String assertionGenerated=connectionManager.makeRequest("generate assertion",response.toLowerCase());
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-            showDiff(currentProject,assertionGenerated,virtualFile,editor);
+            showDiff(currentProject,assertionGenerated+"\n"+response,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(

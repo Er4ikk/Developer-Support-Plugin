@@ -17,6 +17,7 @@ import com.unimol.connectionManager.ConnectionManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.net.http.HttpResponse;
 
 public class CommentSummary extends AnAction {
     private Project currentProject;
@@ -40,9 +41,9 @@ public class CommentSummary extends AnAction {
         if(editor.getSelectionModel().hasSelection()){
             response=editor.getSelectionModel().getSelectedText();
             ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String summaryGenerated=connectionManager.makeRequest("generate comment summary",response);
+            String summaryGenerated=connectionManager.makeRequest("generate comment summary",preProcessStrig(response));
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-            showDiff(currentProject,summaryGenerated,virtualFile,editor);
+            showDiff(currentProject,"\n /* "+summaryGenerated+" */ \n"+response,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(
@@ -70,5 +71,20 @@ public class CommentSummary extends AnAction {
         DiffManagerImpl diffManager = new DiffManagerImpl();
         diffManager.showDiffBuiltin(currentProject,request);
 
+    }
+
+    public String preProcessStrig(String response){
+
+
+        return response
+                .replace('}',' ')
+                .replace('{', ' ')
+                .replace('(',' ')
+                .replace(')',' ')
+                .replace(']',' ')
+                .replace('[',' ')
+                .replace('"',' ')
+                .replace('\'',' ')
+                .toLowerCase();
     }
 }

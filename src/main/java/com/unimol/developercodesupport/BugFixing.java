@@ -52,9 +52,9 @@ public class BugFixing extends AnAction {
         if(editor.getSelectionModel().hasSelection()){
             response=editor.getSelectionModel().getSelectedText();
             ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String bugFixGenerated=connectionManager.makeRequest("generate bug fix",response);
+            String bugFixGenerated=connectionManager.makeRequest("generate bug fix",response.toLowerCase());
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-         showDiff(currentProject,bugFixGenerated,virtualFile,editor);
+         showDiff(currentProject,bugFixGenerated+" \n"+response,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(

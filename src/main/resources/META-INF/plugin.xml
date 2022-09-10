@@ -29,7 +29,6 @@
         <group
           id="com.unimol-developercodesupport.CodeSupportGroup"
           text="Developer Code Support"
-          icon="AllIcons.Debugger.KillProcess"
           popup="true"
         >
 
@@ -51,9 +50,7 @@
                     class="com.unimol.developercodesupport.AssertionRaw"
                     text="Assertion Raw(Java)"/>
 
-            <action id="com.developercodesupport.CodeGenerator"
-                    class="com.unimol.developercodesupport.CommentGenerator"
-                    text="CommentGenerator(Java)"/>
+
 
             <action id="com.unimol.developercodesupport.CommentSummary"
                     class="com.unimol.developercodesupport.CommentSummary" text="Comment Summarization"/>

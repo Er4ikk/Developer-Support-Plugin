@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
-import java.awt.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -51,14 +51,11 @@ public class ConnectionManager {
     public String makeRequest(String codeTask,String codeFragment){
         String response="";
         String finalUrl = "http://" + host + ":" + port;
-        String generateCodeCommentUrl = finalUrl + "/code";
         String generateBugFixUrl = finalUrl + "/bug_fix_small";
         String generateRawAssertUrl = finalUrl + "/assertion_raw";
         String generateCommentSummaryUrl = finalUrl + "/comment_summary";
         switch (codeTask){
-            case "generate comment":
-                response=sendRequest(codeFragment, generateCodeCommentUrl);
-                break;
+
 
             case "generate bug fix":
                 response=sendMultiTaskModelRequest(codeFragment, generateBugFixUrl);
@@ -80,38 +77,7 @@ public class ConnectionManager {
         return response;
     }
 
-    public String  sendRequest(String codeFragment,String url){
-        String requestBodyRaw=creatingRequestBody(codeFragment);
 
-        String requestBody= requestBodyRaw
-                .replaceAll("\\\\n", "")
-                .replaceAll("\\\\t", "").trim();
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .headers("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        HttpResponse<String> response;
-        try {
-            response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-
-            JOptionPane.showMessageDialog(
-                    tabbedPane1,
-                    e,
-                    "Exception detected",
-                    JOptionPane.ERROR_MESSAGE);
-
-            throw new RuntimeException(e);
-
-
-        }
-        return "\n /* "+parseResponse(response)+" */ \n";
-    }
 
     public String  sendMultiTaskModelRequest(String codeFragment,String url){
         String requestBodyRaw=creatingRequestBody(codeFragment);
@@ -142,15 +108,7 @@ public class ConnectionManager {
         return "\n  "+parseMultiTaskModelResponse(response)+"\n";
     }
 
-    public String parseResponse(HttpResponse<String> response){
-        String[] comment=response.body().split(":");
 
-        return comment[1]
-                .replace('}',' ')
-                .replace(']',' ')
-                .replace('[',' ')
-                .replace('"',' ');
-    }
 
     public String parseMultiTaskModelResponse(HttpResponse<String> response){
         String[] comment=response.body().split(":");

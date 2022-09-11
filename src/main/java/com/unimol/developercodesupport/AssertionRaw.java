@@ -54,11 +54,19 @@ public class AssertionRaw extends AnAction {
 
     }
 
+    /**
+       this method opens a show differences window (the same from GitHub showDiff tool)
+       it takes
+       @param currentProject the current Project opened in Intellij
+       @param response that is the suggestion from the model
+       @param virtualFile that is the current file open in the editor
+       @param editor mages the content of the virtual file
+     */
     public void showDiff(Project currentProject, String response, VirtualFile virtualFile, Editor editor) {
         DiffContentFactoryImpl diffContentFactory = new DiffContentFactoryImpl();
         String title = "Diff for " +virtualFile.getName();
         String title1 = "My Version";
-        String title2 =  "Suggestions";
+        String title2 =  "Suggestion";
         DiffContent content1 = diffContentFactory.createFragment(
                 currentProject,
                 editor.getDocument(),

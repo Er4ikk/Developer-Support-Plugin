@@ -31,6 +31,13 @@ public class ConnectionManager {
         return connectionManager;
     }
 
+    /**
+     * This method accept as @parameter the codeFragment selected by the user
+     *      and it @returns the request body as String
+
+     */
+
+
     public String creatingRequestBody(String codeFragment){
         var values = new HashMap<String, String>() {{
             put("message", codeFragment);
@@ -47,7 +54,13 @@ public class ConnectionManager {
         return  requestBody;
     }
 
-
+    /**
+        this method takes
+        @parameter codeTask the string that rapresent the codeTask (Eg: "/bug_fix_small")
+        @parameter codeFragment that contains the selected code fragment
+        and
+        @return the suggestion from the multitask model
+     */
     public String makeRequest(String codeTask,String codeFragment){
         String response="";
         String finalUrl = "http://" + host + ":" + port;
@@ -77,7 +90,13 @@ public class ConnectionManager {
         return response;
     }
 
-
+    /**
+        this method takes
+        @parameter url the string that rapresent the full url of the codeTask
+        @parameter codeFragment that contains the selected code fragment
+        and
+        @return the suggestion from the multitask model
+     */
 
     public String  sendMultiTaskModelRequest(String codeFragment,String url){
         String requestBodyRaw=creatingRequestBody(codeFragment);
@@ -109,7 +128,12 @@ public class ConnectionManager {
     }
 
 
+    /**
+      this method takes
+      @param response that is the HttpResponse
+      and replaces raw characters from the model
 
+     */
     public String parseMultiTaskModelResponse(HttpResponse<String> response){
         String[] comment=response.body().split(":");
 

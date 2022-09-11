@@ -48,13 +48,13 @@ public class BugFixing extends AnAction {
         this.currentProject = event.getProject();
         event.getPresentation().setEnabledAndVisible(this.currentProject != null);
         Editor editor = event.getData(CommonDataKeys.EDITOR);
-        String response="test";
+        String textSelected="test";
         if(editor.getSelectionModel().hasSelection()){
-            response=editor.getSelectionModel().getSelectedText();
+            textSelected=editor.getSelectionModel().getSelectedText();
             ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String bugFixGenerated=connectionManager.makeRequest("generate bug fix",response.toLowerCase());
+            String bugFixGenerated=connectionManager.makeRequest("generate bug fix",preProcessStrig(textSelected));
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-         showDiff(currentProject,bugFixGenerated+" \n"+response,virtualFile,editor);
+         showDiff(currentProject,bugFixGenerated+" \n"+textSelected,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(
@@ -66,11 +66,20 @@ public class BugFixing extends AnAction {
 
     }
 
+     /**
+       this method opens a show differences window (the same from GitHub showDiff tool)
+       it takes
+       @param currentProject the current Project opened in Intellij
+       @param response that is the suggestion from the model
+       @param virtualFile that is the current file open in the editor
+       @param editor mages the content of the virtual file
+     */
+
     public void showDiff(Project currentProject,String response,VirtualFile virtualFile,Editor editor) {
         DiffContentFactoryImpl diffContentFactory = new DiffContentFactoryImpl();
         String title = "Diff for " +virtualFile.getName();
         String title1 = "My Version";
-        String title2 =  "Suggestions";
+        String title2 =  "Suggestion";
             DiffContent content1 = diffContentFactory.createFragment(
                     currentProject,
                     editor.getDocument(),
@@ -91,5 +100,21 @@ public class BugFixing extends AnAction {
 
     public void setCurrentProject(Project currentProject) {
         this.currentProject = currentProject;
+    }
+
+
+    /**
+      this method takes
+      @param response that is the raw selected code from the user
+      @return the string pre-processed for the model
+
+     */
+    public String preProcessStrig(String response){
+
+
+        return response
+                .replaceAll("\\\\n", "")
+                .replaceAll("\\\\t","").trim()
+                .toLowerCase();
     }
 }

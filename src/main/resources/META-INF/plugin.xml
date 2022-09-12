@@ -13,7 +13,22 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+   <description> This plugin supports these coding tasks (Only Java)  :
+       <![CDATA[<ul>]]>
+             <![CDATA[<li>]]> Bug Fixing <![CDATA[</li>]]>
+             <![CDATA[<li>]]> Raw Assertion <![CDATA[</li>]]>
+             <![CDATA[<li>]]> Code Summarization <![CDATA[</li>]]>
+       <![CDATA[</ul>]]>
 
+       How to use the plugin:
+
+       <![CDATA[<ol>]]>
+       <![CDATA[<li>]]> Underline the code fragment <![CDATA[</li>]]>
+       <![CDATA[<li>]]> Right-click and go to "Refactor" > "Developer Code Support" > "Bug Fixing (java)" <![CDATA[</li>]]>
+       <![CDATA[<li>]]> Suggestion will be generated in a "Show Differences" tab <![CDATA[</li>]]>
+       <![CDATA[<li>]]> Accept / Deny the suggestion and then close the tab window <![CDATA[</li>]]>
+       <![CDATA[</ol>]]>
+   </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->

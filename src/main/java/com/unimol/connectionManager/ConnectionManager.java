@@ -32,8 +32,9 @@ public class ConnectionManager {
     }
 
     /**
-     * This method accept as @parameter the codeFragment selected by the user
-     *      and it @returns the request body as String
+     * This method accept as
+     * @param  codeFragment selected by the user
+     * and it @return the request body as String
 
      */
 
@@ -55,11 +56,11 @@ public class ConnectionManager {
     }
 
     /**
-        this method takes
-        @parameter codeTask the string that rapresent the codeTask (Eg: "/bug_fix_small")
-        @parameter codeFragment that contains the selected code fragment
-        and
-        @return the suggestion from the multitask model
+     * this method takes
+     *@param codeTask the string that rapresent the codeTask (Eg: "/bug_fix_small")
+     * @param codeFragment that contains the selected code fragment
+     * and
+     * @return the suggestion from the multitask model
      */
     public String makeRequest(String codeTask,String codeFragment){
         String response="";
@@ -91,11 +92,10 @@ public class ConnectionManager {
     }
 
     /**
-        this method takes
-        @parameter url the string that rapresent the full url of the codeTask
-        @parameter codeFragment that contains the selected code fragment
-        and
-        @return the suggestion from the multitask model
+     * this method takes
+     * @param url the string that rapresent the full url of the codeTask
+     * @param codeFragment that contains the selected code fragment and
+     * @return the suggestion from the multitask model
      */
 
     public String  sendMultiTaskModelRequest(String codeFragment,String url){
@@ -129,9 +129,9 @@ public class ConnectionManager {
 
 
     /**
-      this method takes
-      @param response that is the HttpResponse
-      and replaces raw characters from the model
+     * this method takes
+     * @param response that is the HttpResponse
+     * and replaces raw characters from the model
 
      */
     public String parseMultiTaskModelResponse(HttpResponse<String> response){

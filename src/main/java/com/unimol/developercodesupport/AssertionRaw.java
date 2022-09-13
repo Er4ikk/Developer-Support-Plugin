@@ -42,7 +42,8 @@ public class AssertionRaw extends AnAction {
             ConnectionManager connectionManager = ConnectionManager.getInstance();
             String assertionGenerated=connectionManager.makeRequest("generate assertion",response.toLowerCase());
             VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-            showDiff(currentProject,assertionGenerated+"\n"+response,virtualFile,editor);
+            String suggestion = insertAssertion(assertionGenerated,response);
+            showDiff(currentProject,suggestion,virtualFile,editor);
 
         }else{
             JOptionPane.showMessageDialog(
@@ -55,12 +56,12 @@ public class AssertionRaw extends AnAction {
     }
 
     /**
-       this method opens a show differences window (the same from GitHub showDiff tool)
-       it takes
-       @param currentProject the current Project opened in Intellij
-       @param response that is the suggestion from the model
-       @param virtualFile that is the current file open in the editor
-       @param editor mages the content of the virtual file
+     * this method opens a show differences window (the same from GitHub showDiff tool)
+     * it takes
+     * @param currentProject the current Project opened in Intellij
+     * @param response that is the suggestion from the model
+     * @param virtualFile that is the current file open in the editor
+     * @param editor mages the content of the virtual file
      */
     public void showDiff(Project currentProject, String response, VirtualFile virtualFile, Editor editor) {
         DiffContentFactoryImpl diffContentFactory = new DiffContentFactoryImpl();
@@ -78,6 +79,17 @@ public class AssertionRaw extends AnAction {
         DiffManagerImpl diffManager = new DiffManagerImpl();
         diffManager.showDiffBuiltin(currentProject,request);
 
+    }
+
+    public String insertAssertion(String assertion,String sourceCode){
+        String[] codeSplitted = sourceCode.split("\n");
+        if(codeSplitted[codeSplitted.length-1].contains("}")){
+            codeSplitted[codeSplitted.length-2]+=assertion;
+        }else{
+            codeSplitted[codeSplitted.length-1]+=assertion;
+        }
+
+        return  String.join("\n",codeSplitted);
     }
 
 

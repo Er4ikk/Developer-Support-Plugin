@@ -56,12 +56,12 @@ public class CommentSummary extends AnAction {
     }
 
      /**
-       this method opens a show differences window (the same from GitHub showDiff tool)
-       it takes
-       @param currentProject the current Project opened in Intellij
-       @param response that is the suggestion from the model
-       @param virtualFile that is the current file open in the editor
-       @param editor mages the content of the virtual file
+      * this method opens a show differences window (the same from GitHub showDiff tool)
+      * it takes
+      * @param currentProject the current Project opened in Intellij
+      * @param response that is the suggestion from the model
+      * @param virtualFile that is the current file open in the editor
+      * @param editor mages the content of the virtual file
      */
 
     public void showDiff(Project currentProject, String response, VirtualFile virtualFile, Editor editor) {
@@ -83,9 +83,9 @@ public class CommentSummary extends AnAction {
     }
 
     /**
-     this method takes
-     @param response that is the raw selected code from the user
-     @return the string pre-processed for the model
+     * this method takes
+     * @param response that is the raw selected code from the user
+     * @return the string pre-processed for the model
 
     */
     public String preProcessStrig(String response){

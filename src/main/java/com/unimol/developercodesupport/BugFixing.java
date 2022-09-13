@@ -1,26 +1,22 @@
 package com.unimol.developercodesupport;
 
-import com.intellij.diff.*;
-
-
+import com.intellij.diff.DiffContentFactoryImpl;
+import com.intellij.diff.DiffManagerImpl;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
-
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-
 import com.intellij.openapi.vfs.VirtualFile;
-
 import com.unimol.connectionManager.ConnectionManager;
+//import edu.wm.cs.src2abs.AbstractorManager;
+//import edu.wm.cs.src2abs.parser.Parser;
 import org.jetbrains.annotations.NotNull;
-
 
 import javax.swing.*;
 
@@ -67,12 +63,12 @@ public class BugFixing extends AnAction {
     }
 
      /**
-       this method opens a show differences window (the same from GitHub showDiff tool)
-       it takes
-       @param currentProject the current Project opened in Intellij
-       @param response that is the suggestion from the model
-       @param virtualFile that is the current file open in the editor
-       @param editor mages the content of the virtual file
+      *  this method opens a show differences window (the same from GitHub showDiff tool)
+      *  it takes
+      *  @param currentProject the current Project opened in Intellij
+      *  @param response that is the suggestion from the model
+      *  @param virtualFile that is the current file open in the editor
+      *  @param editor mages the content of the virtual file
      */
 
     public void showDiff(Project currentProject,String response,VirtualFile virtualFile,Editor editor) {
@@ -104,17 +100,20 @@ public class BugFixing extends AnAction {
 
 
     /**
-      this method takes
-      @param response that is the raw selected code from the user
-      @return the string pre-processed for the model
-
+     * this method takes
+     * @param response that is the raw selected code from the user
+     * @return the string pre-processed for the model
      */
     public String preProcessStrig(String response){
 
-
+        //AbstractorManager abstractionManager = new AbstractorManager();
+        //abstractionManager.abstractCode(Parser.CodeGranularity.METHOD,"single","boh","bod");
         return response
                 .replaceAll("\\\\n", "")
                 .replaceAll("\\\\t","").trim()
                 .toLowerCase();
     }
+
+
+
 }

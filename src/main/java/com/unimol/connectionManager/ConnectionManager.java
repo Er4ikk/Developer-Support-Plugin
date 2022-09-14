@@ -154,7 +154,8 @@ public class ConnectionManager {
         return comment
                 .replace('[',' ')
                 .replace(']',' ')
-                .replace("\"","");
+                .replace("/","")
+                .replace('"',' ');
     }
 
     public String parseComment(String comment){

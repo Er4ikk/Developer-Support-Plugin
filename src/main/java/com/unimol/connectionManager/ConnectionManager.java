@@ -64,6 +64,7 @@ public class ConnectionManager {
      */
     public String makeRequest(String codeTask,String codeFragment){
         String response="";
+        String parsedResponse="";
         String finalUrl = "http://" + host + ":" + port;
         String generateBugFixUrl = finalUrl + "/bug_fix_small";
         String generateRawAssertUrl = finalUrl + "/assertion_raw";
@@ -72,23 +73,24 @@ public class ConnectionManager {
 
 
             case "generate bug fix":
-                response=sendMultiTaskModelRequest(codeFragment, generateBugFixUrl);
+                    response=sendMultiTaskModelRequest(codeFragment, generateBugFixUrl);
+                    parsedResponse= parseBugFix(response);
                 break;
 
             case "generate assertion":
-                response=sendMultiTaskModelRequest(codeFragment, generateRawAssertUrl);
+                    response=sendMultiTaskModelRequest(codeFragment, generateRawAssertUrl);
+                    parsedResponse= parseAssertion(response);
                 break;
 
             case "generate comment summary":
-                response=sendMultiTaskModelRequest(codeFragment, generateCommentSummaryUrl);
+                    response=sendMultiTaskModelRequest(codeFragment, generateCommentSummaryUrl);
+                    parsedResponse= parseComment(response);
                 break;
             default:
                 System.out.println("Invalid task");
         }
 
-
-
-        return response;
+        return parsedResponse;
     }
 
     /**
@@ -124,7 +126,7 @@ public class ConnectionManager {
                     JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException(e);
         }
-        return "\n  "+parseMultiTaskModelResponse(response)+"\n";
+        return parseMultiTaskModelResponse(response) ;
     }
 
 
@@ -136,13 +138,29 @@ public class ConnectionManager {
      */
     public String parseMultiTaskModelResponse(HttpResponse<String> response){
         String[] comment=response.body().split(":");
+        return comment[0];
 
-        return comment[0]
-                .replace('}',' ')
-                .replace(']',' ')
+    }
+
+    public String parseBugFix(String comment){
+        return comment
+                .substring(4,comment.length()-4)
+                .replace("{","{\n")
+                .replaceAll(";",";\n")
+                .replaceAll("}","}\n");
+    }
+
+    public String parseAssertion(String comment){
+        return comment
                 .replace('[',' ')
-                .replace('"',' ')
-                .replace('\'',' ');
+                .replace(']',' ')
+                .replace("\"","");
+    }
+
+    public String parseComment(String comment){
+        return comment
+                .substring(1,comment.length()-2)
+                .replace('"',' ');
     }
     }
 

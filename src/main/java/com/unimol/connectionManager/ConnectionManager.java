@@ -67,6 +67,7 @@ public class ConnectionManager {
         String parsedResponse="";
         String finalUrl = "http://" + host + ":" + port;
         String generateBugFixUrl = finalUrl + "/bug_fix_small";
+        String generateBugFixMediumUrl = finalUrl + "/bug_fix_medium";
         String generateRawAssertUrl = finalUrl + "/assertion_raw";
         String generateCommentSummaryUrl = finalUrl + "/comment_summary";
         switch (codeTask){
@@ -75,6 +76,11 @@ public class ConnectionManager {
             case "generate bug fix":
                     response=sendMultiTaskModelRequest(codeFragment, generateBugFixUrl);
                     parsedResponse= parseBugFix(response);
+                break;
+
+            case "generate medium bug fix":
+                response=sendMultiTaskModelRequest(codeFragment, generateBugFixMediumUrl);
+                parsedResponse= parseBugFix(response);
                 break;
 
             case "generate assertion":
@@ -158,7 +164,9 @@ public class ConnectionManager {
                 .replace('"',' ');
     }
 
-    public String parseComment(String comment){
+
+ /*  parsed the comment string into a valid comment */
+ public String parseComment(String comment){
         return comment
                 .substring(1,comment.length()-2)
                 .replace('"',' ');

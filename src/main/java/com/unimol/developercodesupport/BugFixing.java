@@ -45,12 +45,26 @@ public class BugFixing extends AnAction {
         event.getPresentation().setEnabledAndVisible(this.currentProject != null);
         Editor editor = event.getData(CommonDataKeys.EDITOR);
         String textSelected="test";
-        if(editor.getSelectionModel().hasSelection()){
+        if(editor.getSelectionModel().hasSelection() ){
             textSelected=editor.getSelectionModel().getSelectedText();
-            ConnectionManager connectionManager = ConnectionManager.getInstance();
-            String bugFixGenerated=connectionManager.makeRequest("generate bug fix",preProcessStrig(textSelected));
-            VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
-         showDiff(currentProject,bugFixGenerated+" \n"+textSelected,virtualFile,editor);
+            if(countWords(textSelected)<50){
+                ConnectionManager connectionManager = ConnectionManager.getInstance();
+                String bugFixGenerated=connectionManager.makeRequest("generate bug fix",preProcessStrig(textSelected));
+                VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
+                showDiff(currentProject,bugFixGenerated,virtualFile,editor);
+            }else if(countWords(textSelected)>=50 && countWords(textSelected)<=99){
+                ConnectionManager connectionManager = ConnectionManager.getInstance();
+                String bugFixGenerated=connectionManager.makeRequest("generate medium bug fix",preProcessStrig(textSelected));
+                VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
+                showDiff(currentProject,bugFixGenerated,virtualFile,editor);
+            }else if (countWords(textSelected)>=100){
+                JOptionPane.showMessageDialog(
+                        tabbedPane1,
+                        "Maximium amount of words  is 100",
+                        "Too many words",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
 
         }else{
             JOptionPane.showMessageDialog(
@@ -59,7 +73,6 @@ public class BugFixing extends AnAction {
                                         "No Code Selected",
                                     JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
      /**
@@ -112,6 +125,15 @@ public class BugFixing extends AnAction {
                 .replaceAll("\\\\n", "")
                 .replaceAll("\\\\t","").trim()
                 .toLowerCase();
+    }
+
+    public static int countWords(String input) {
+        if (input == null || input.isEmpty()) {
+            return 0;
+        }
+
+        String[] words = input.split("\\s+");
+        return words.length;
     }
 
 

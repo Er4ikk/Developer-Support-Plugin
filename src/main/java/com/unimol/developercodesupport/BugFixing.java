@@ -14,12 +14,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.unimol.connectionManager.ConnectionManager;
-//import edu.wm.cs.src2abs.AbstractorManager;
-//import edu.wm.cs.src2abs.parser.Parser;
+
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-
 
 
 public class BugFixing extends AnAction {
@@ -28,6 +26,7 @@ public class BugFixing extends AnAction {
 
     private Project currentProject;
     private JTabbedPane tabbedPane1;
+
 
     @Override
     public void update(@NotNull AnActionEvent event) {
@@ -51,6 +50,7 @@ public class BugFixing extends AnAction {
                 ConnectionManager connectionManager = ConnectionManager.getInstance();
                 String bugFixGenerated=connectionManager.makeRequest("generate bug fix",preProcessStrig(textSelected));
                 VirtualFile virtualFile=event.getData(PlatformDataKeys.VIRTUAL_FILE);
+
                 showDiff(currentProject,bugFixGenerated,virtualFile,editor);
             }else if(countWords(textSelected)>=50 && countWords(textSelected)<=99){
                 ConnectionManager connectionManager = ConnectionManager.getInstance();
@@ -119,12 +119,9 @@ public class BugFixing extends AnAction {
      */
     public String preProcessStrig(String response){
 
-        //AbstractorManager abstractionManager = new AbstractorManager();
-        //abstractionManager.abstractCode(Parser.CodeGranularity.METHOD,"single","boh","bod");
         return response
                 .replaceAll("\\\\n", "")
-                .replaceAll("\\\\t","").trim()
-                .toLowerCase();
+                .replaceAll("\\\\t","").trim();
     }
 
     public static int countWords(String input) {
@@ -135,7 +132,6 @@ public class BugFixing extends AnAction {
         String[] words = input.split("\\s+");
         return words.length;
     }
-
 
 
 }

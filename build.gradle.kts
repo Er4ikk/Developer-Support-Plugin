@@ -10,9 +10,7 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(files("libs/src2abs.jar"))
-}
+
 
 
 
@@ -30,6 +28,7 @@ tasks {
         sourceCompatibility = "11"
         targetCompatibility = "11"
     }
+
 
     patchPluginXml {
         sinceBuild.set("212")

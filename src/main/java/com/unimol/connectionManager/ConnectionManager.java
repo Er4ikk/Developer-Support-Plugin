@@ -150,7 +150,7 @@ public class ConnectionManager {
 
     public String parseBugFix(String comment){
         return comment
-                .substring(4,comment.length()-4)
+                .replace('"',' ')
                 .replace("{","{\n")
                 .replaceAll(";",";\n")
                 .replaceAll("}","}\n");

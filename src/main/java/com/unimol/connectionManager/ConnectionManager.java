@@ -15,7 +15,10 @@ import java.util.HashMap;
 public class ConnectionManager {
 
     private static ConnectionManager connectionManager=null;
-    private final String host="localhost";
+    //private final String host="127.0.0.1";
+    private final String host="wittorio.ddns.net";
+   // private final String port="5000";
+    //private final String host="91.254.128.212";
     private final String port="5000";
     private JTabbedPane tabbedPane1;
 
